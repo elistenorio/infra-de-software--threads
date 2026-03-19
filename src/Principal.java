@@ -103,22 +103,34 @@ public class Principal{
 
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Terminal ativo!");
-        System.out.println("Digite: tocar, pausar, bpm <numero> ou interromper");
+        System.out.println("Terminal ativo!!!!!!");
 
         while (true) {
             String linha = scanner.nextLine();
             String[] comando = linha.split(" ");
 
-            if (comando[0].equals("bpm") && comando.length > 1) {
-                baixo.setBpm(Integer.parseInt(comando[1]));
+            if(comando.length > 1){
+                switch(comando[0].toLowerCase()){
+                    case "baixo":
+                        baixo.setBpm(Integer.parseInt(comando[1]));
+                        break;
+                    case "guitarra":
+                        guitarra.setBpm(Integer.parseInt(comando[1]));
+                        break;
+                    case "bateria":
+                        bateria.setBpm(Integer.parseInt(comando[1]));
+                        break;
+                    case "synth":
+                        synth.setBpm(Integer.parseInt(comando[1]));
+                        break;
+                }
             }
-            else if (comando[0].equals("interromper")) {
+            if(comando[0].equalsIgnoreCase("interromper")){
+                bateria.interromper();
+                synth.interromper();
+                guitarra.interromper();
                 baixo.interromper();
                 break;
-            }
-            else {
-                System.out.println("Comando inválido!");
             }
         }
 
