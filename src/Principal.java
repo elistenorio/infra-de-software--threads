@@ -7,7 +7,7 @@ public class Principal{
 
         JFrame janela = new JFrame("Minha Banda");
         janela.setLayout(new GridLayout(2, 1));
-        janela.setSize(450, 200);
+        janela.setSize(640, 320);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -16,8 +16,11 @@ public class Principal{
         textoBaixo.setFont(new Font("Arial", Font.BOLD, 16));
         JButton botaoBaixo = new JButton("Play/Pause");
 
+        JButton botaoInterromper = new JButton("Stop");
+
         painelBaixo.add(textoBaixo);
         painelBaixo.add(botaoBaixo);
+        painelBaixo.add(botaoInterromper);
 
         janela.add(painelBaixo);
         janela.setVisible(true);
@@ -27,6 +30,7 @@ public class Principal{
         baixo.ligar();
 
         botaoBaixo.addActionListener(e -> baixo.alternar());
+        botaoInterromper.addActionListener(e -> baixo.interromper());
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Terminal ativo!");

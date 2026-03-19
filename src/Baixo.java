@@ -65,6 +65,7 @@ public class Baixo {
     }
 
     public void interromper(){
+        atualizarTela("Status Baixo: INTERROMPIDO -- BPM: " + bpm, Color.RED);
         thread.interrupt();
     }
 
