@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Baixo {
+public class Synth {
+
     private boolean pausa = true;
     private int bpm = 120;
     private final Object lock = new Object();
@@ -9,7 +10,7 @@ public class Baixo {
     private Thread thread;
     private JLabel label;
 
-    public Baixo(JLabel label) {
+    public Synth(JLabel label) {
         this.label = label;
 
         thread = new Thread(() -> {
@@ -17,14 +18,16 @@ public class Baixo {
                 synchronized (lock) {
                     while (pausa) {
                         try {
-                            atualizarTela("Status Baixo: PAUSADO -- BPM: " + bpm, Color.RED);
+                            atualizarTela("Status Synth: PAUSADO -- BPM: " + bpm, Color.RED);
                             lock.wait();
-                        } catch (InterruptedException e) { return; }
+                        } catch (InterruptedException e) {
+                            return;
+                        }
                     }
                 }
 
-                atualizarTela("Status Baixo: TOCANDO -- BPM: " + bpm, new Color(0, 150, 0));
-                System.out.println("Dummmm dummmmm dummmm");
+                atualizarTela("Status Synth: TOCANDO -- BPM: " + bpm, new Color(0, 150, 0));
+                System.out.println("Piuuu piiuuu puii");
 
                 try {
                     int tempoEspera;
@@ -32,7 +35,7 @@ public class Baixo {
                         tempoEspera = 60000 / bpm;
                     }
                     Thread.sleep(tempoEspera);
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     return;
                 }
             }
@@ -43,22 +46,26 @@ public class Baixo {
         thread.start();
     }
 
-    public void tocar(){
-        synchronized (lock){
+    public void tocar() {
+        synchronized (lock) {
             pausa = false;
             lock.notify();
         }
     }
-    public void pausar(){
-        synchronized (lock){
+
+    public void pausar() {
+        synchronized (lock) {
             pausa = true;
         }
     }
 
-    public void alternar(){
+    public void alternar() {
         synchronized (lock) {
-            if (pausa) tocar();
-            else pausar();
+            if (pausa) {
+                tocar();
+            } else {
+                pausar();
+            }
         }
     }
 
@@ -66,8 +73,8 @@ public class Baixo {
         synchronized (lock) { this.bpm = novoBpm; }
     }
 
-    public void interromper(){
-        atualizarTela("Status Baixo: INTERROMPIDO -- BPM: " + bpm, Color.RED);
+    public void interromper() {
+        atualizarTela("Status Synth: INTERROMPIDO -- BPM: " + bpm, Color.RED);
         thread.interrupt();
     }
 

@@ -1,57 +1,87 @@
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
 
 public class Bateria {
 
-    static boolean pausaBateria = true;
-    static final Object lock = new Object();
+    private boolean pausa = true;
+    private int bpm = 120;
+    private final Object lock = new Object();
 
-    public static void main(String[] args) {
+    private Thread thread;
+    private JLabel label;
 
-        Thread bateria = new Thread(() -> {
+    public Bateria(JLabel label) {
+        this.label = label;
+
+        thread = new Thread(() -> {
             while (true) {
                 synchronized (lock) {
-                    while (pausaBateria) {
+                    while (pausa) {
                         try {
+                            atualizarTela("Status Bateria: PAUSADO -- BPM: " + bpm, Color.RED);
                             lock.wait();
                         } catch (InterruptedException e) {
                             return;
                         }
                     }
                 }
+
+                atualizarTela("Status Bateria: TOCANDO -- BPM: " + bpm, new Color(0, 150, 0));
                 System.out.println("Badum-tssss");
 
                 try {
-                    Thread.sleep(500); //eh bom a gente fazer um calculo de bpm aqui pra a gente conseguir mudar o bpm depois
+                    int tempoEspera;
+                    synchronized (lock) {
+                        tempoEspera = 60000 / bpm;
+                    }
+                    Thread.sleep(tempoEspera);
                 } catch (InterruptedException e) {
                     return;
                 }
             }
         });
+    }
 
-        bateria.start();
+    public void ligar() {
+        thread.start();
+    }
 
-        Scanner scanner = new Scanner(System.in);
+    public void tocar() {
+        synchronized (lock) {
+            pausa = false;
+            lock.notify();
+        }
+    }
 
-        while (true) {
-            String status = scanner.nextLine();
+    public void pausar() {
+        synchronized (lock) {
+            pausa = true;
+        }
+    }
 
-            if (status.equals("tocar")) {
-                synchronized (lock) {
-                    pausaBateria = false;
-                    lock.notify();
-                }
-            }
-            else if (status.equals("pausar")) {
-                synchronized (lock) {
-                    pausaBateria = true;
-                }
-            }
-            else if (status.equals("interromper")) {
-                bateria.interrupt(); // Isso aqui manda a thread interromper, é necessário?
-                break;
+    public void alternar() {
+        synchronized (lock) {
+            if (pausa) {
+                tocar();
+            } else {
+                pausar();
             }
         }
+    }
 
-        scanner.close();
+    public void setBpm(int novoBpm) {
+        synchronized (lock) { this.bpm = novoBpm; }
+    }
+
+    public void interromper() {
+        atualizarTela("Status Bateria: INTERROMPIDA -- BPM: " + bpm, Color.RED);
+        thread.interrupt();
+    }
+
+    private void atualizarTela(String texto, Color cor) {
+        SwingUtilities.invokeLater(() -> {
+            label.setText(texto);
+            label.setForeground(cor);
+        });
     }
 }
