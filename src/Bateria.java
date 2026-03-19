@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Main {
+public class Bateria {
 
     static boolean pausaBateria = true;
     static final Object lock = new Object();
