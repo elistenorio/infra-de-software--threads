@@ -6,7 +6,7 @@ public class Principal{
     public static void main(String[] args) {
 
         JFrame janela = new JFrame("Minha Banda");
-        janela.setLayout(new GridLayout(2, 1));
+        janela.setLayout(new GridLayout(4, 1));
         janela.setSize(640, 320);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -25,7 +25,7 @@ public class Principal{
 
         janela.add(painelBaixo);
 
-        Baixo baixo = new Baixo(textoBaixo);
+        Instrumento baixo = new Instrumento(textoBaixo, "Baixo", "dumm dumm dumm");
         baixo.ligar();
 
         botaoBaixo.addActionListener(e -> baixo.alternar());
@@ -47,7 +47,7 @@ public class Principal{
 
         janela.add(painelBateria);
 
-        Bateria bateria = new Bateria(textoBateria);
+        Instrumento bateria = new Instrumento(textoBateria, "Bateria", "badum-tsssss");
         bateria.ligar();
 
         botaoBateria.addActionListener(e -> bateria.alternar());
@@ -70,7 +70,7 @@ public class Principal{
         janela.add(painelSynth);
 
 
-        Synth synth = new Synth(textoSynth);
+        Instrumento synth = new Instrumento(textoSynth, "Synth", "poimmmmmm poimmmmm");
         synth.ligar();
 
         botaoSynth.addActionListener(e -> synth.alternar());
@@ -94,7 +94,7 @@ public class Principal{
 
         janela.setVisible(true);
 
-        Guitarra guitarra = new Guitarra(textoGuitarra);
+        Instrumento guitarra = new Instrumento(textoGuitarra, "Guitarra", "strumm strumm");
         guitarra.ligar();
 
         botaoGuitarra.addActionListener(e -> guitarra.alternar());

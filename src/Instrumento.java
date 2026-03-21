@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Synth {
+public class Instrumento {
 
+    private String nome;
+    private String som;
     private boolean pausa = true;
     private int bpm = 120;
     private final Object lock = new Object();
@@ -10,7 +12,9 @@ public class Synth {
     private Thread thread;
     private JLabel label;
 
-    public Synth(JLabel label) {
+    public Instrumento(JLabel label, String nome, String som) {
+        this.nome = nome;
+        this.som = som;
         this.label = label;
 
         thread = new Thread(() -> {
@@ -18,7 +22,7 @@ public class Synth {
                 synchronized (lock) {
                     while (pausa) {
                         try {
-                            atualizarTela("Status Synth: PAUSADO -- BPM: " + bpm, Color.RED);
+                            atualizarTela("Status " + this.nome + ": PAUSADO -- BPM: " + bpm, Color.RED);
                             lock.wait();
                         } catch (InterruptedException e) {
                             return;
@@ -26,8 +30,8 @@ public class Synth {
                     }
                 }
 
-                atualizarTela("Status Synth: TOCANDO -- BPM: " + bpm, new Color(0, 150, 0));
-                System.out.println("Piuuu piiuuu puii");
+                atualizarTela("Status " + this.nome + ": TOCANDO -- BPM: " + bpm, Color.GREEN);
+                System.out.println(this.som);
 
                 try {
                     int tempoEspera;
@@ -74,7 +78,7 @@ public class Synth {
     }
 
     public void interromper() {
-        atualizarTela("Status Synth: INTERROMPIDO -- BPM: " + bpm, Color.RED);
+        atualizarTela("Status " + this.nome + ": INTERROMPIDO -- BPM: " + bpm, Color.RED);
         thread.interrupt();
     }
 
